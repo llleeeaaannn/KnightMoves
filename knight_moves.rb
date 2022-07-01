@@ -61,9 +61,7 @@ def knight_moves(start, finish)
   print_path(parents_array(current))
 end
 
-start = Time.now
 knight_moves([1, 1], [4, 5])
-knight_moves([1, 1], [5, 8])
-knight_moves([8, 8], [1, 1])
+knight_moves([3, 3], [5, 8])
+knight_moves([4, 4], [1, 1])
 knight_moves([1, 8], [8, 1])
-puts Time.now - start
