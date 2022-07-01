@@ -12,9 +12,10 @@ class Knight
   TRANSFORMATIONS = [[2, 1], [-2, 1], [1, 2], [-1, 2], [1, -2], [-1, -2], [2, -1], [-2, -1]]
 
   # Method which creates a child node for each valid move from the node the method is called upon. Each child node is added to the parent node's 'children' variable
-  def make_children
+  def make_children(used)
     childs = TRANSFORMATIONS.map { |move| [position[0] + move[0], position[1] + move[1]] }
                             .select { |p| in_board?(p) }
+                            .reject { |p| used.include?(p) }
 
     childs.each do |child|
       children.push(Knight.new(child, self))
@@ -46,17 +47,23 @@ end
 # Method which accepts a start position in the form of an array of two values between 1 & 8 and a finish position in the same format (For example, knight_moves([1, 1], [5, 8])) and creates a tree of moves. The shortest path of moves from the start position to the finish position is then printed.
 def knight_moves(start, finish)
   current = Knight.new(start, nil)
+  used = [current.position]
   queue = [current]
   while current.position != finish
-    current.make_children
-    current.children.each { |child| queue.push(child)}
+    current.make_children(used)
+    current.children.each do |child|
+      queue.push(child)
+      used.push(child.position)
+    end
     queue.shift
     current = queue[0]
   end
   print_path(parents_array(current))
 end
 
+start = Time.now
 knight_moves([1, 1], [4, 5])
 knight_moves([1, 1], [5, 8])
 knight_moves([8, 8], [1, 1])
 knight_moves([1, 8], [8, 1])
+puts Time.now - start
